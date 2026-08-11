@@ -1,9 +1,7 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
-import FrostBorder from '../components/FrostBorder.astro';
 import Header from '../components/Header.astro';
-import Snowfall from '../components/Snowfall.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { Image } from 'astro:assets';
 import HeroPhoto from '../assets/headshot.jpg';
@@ -51,8 +49,6 @@ const steps = [
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
-		<Snowfall />
-		<FrostBorder />
 		<Header />
 		<main>
 			<section class="hero">

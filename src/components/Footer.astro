@@ -4,7 +4,6 @@ const today = new Date();
 ---
 
 <footer>
-	<canvas id="footer-snowbank" class="snow-bank" aria-hidden="true"></canvas>
 	<p class="brand-line">
 		<SnowflakeIcon size={16} class="brand-icon" />
 		&copy; {today.getFullYear()} Jake Snow. All rights reserved.
@@ -12,7 +11,7 @@ const today = new Date();
 	<div class="social-links">
 		<a href="https://github.com/97jake" target="_blank">
 			<span class="sr-only">Go to Jake's GitHub</span>
-			<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github"
+			<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
 				><path
 					fill="currentColor"
 					d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
@@ -24,7 +23,7 @@ const today = new Date();
 <style>
 	footer {
 		position: relative;
-		padding: 0 1em 6em 1em;
+		padding: 2em 1em;
 		background: linear-gradient(var(--gray-gradient)) no-repeat;
 		color: rgb(var(--gray));
 		text-align: center;
@@ -36,12 +35,6 @@ const today = new Date();
 				var(--accent-purple)
 			)
 			1;
-	}
-	.snow-bank {
-		display: block;
-		width: 100%;
-		height: 84px;
-		filter: drop-shadow(0 4px 6px rgba(var(--gray), 0.3));
 	}
 	.brand-line {
 		display: flex;
@@ -69,242 +62,3 @@ const today = new Date();
 		color: var(--accent);
 	}
 </style>
-
-<script>
-	const canvas = document.getElementById('footer-snowbank') as HTMLCanvasElement | null;
-	const ctx = canvas?.getContext('2d') ?? null;
-	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-	if (canvas && ctx) {
-		const SNOW_COLOR = '96, 115, 159';
-
-		// A small soft-circle sprite for the falling flakes only. The bank itself
-		// is drawn as one continuous filled silhouette (not stacked sprites) so
-		// overlapping shapes never double up their alpha into dark seams.
-		function buildSprite(padding: number, softness: number) {
-			const dim = Math.ceil(padding * 2);
-			const spriteCanvas = document.createElement('canvas');
-			spriteCanvas.width = dim;
-			spriteCanvas.height = dim;
-			const sctx = spriteCanvas.getContext('2d')!;
-			const gradient = sctx.createRadialGradient(dim / 2, dim / 2, 0, dim / 2, dim / 2, padding);
-			gradient.addColorStop(0, '#ffffff');
-			gradient.addColorStop(softness, `rgba(${SNOW_COLOR}, 0.35)`);
-			gradient.addColorStop(1, `rgba(${SNOW_COLOR}, 0)`);
-			sctx.fillStyle = gradient;
-			sctx.beginPath();
-			sctx.arc(dim / 2, dim / 2, padding, 0, Math.PI * 2);
-			sctx.fill();
-			return spriteCanvas;
-		}
-
-		const flakeSprite = buildSprite(6, 0.5);
-
-		type ProfilePoint = { x: number; base: number; growth: number };
-
-		type Flake = {
-			x: number;
-			y: number;
-			radius: number;
-			speed: number;
-			wobble: number;
-			wobbleSpeed: number;
-			opacity: number;
-		};
-
-		let width = 0;
-		let height = 0;
-		const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-		const step = 14;
-		const maxGrowth = 16;
-		let profile: ProfilePoint[] = [];
-		let sparkles: { x: number; y: number; phase: number }[] = [];
-		let flakes: Flake[] = [];
-		let bankGradient: CanvasGradient | null = null;
-		let animationFrame = 0;
-		let running = false;
-		let inView = false;
-		let time = 0;
-
-		function buildProfile() {
-			const count = Math.ceil(width / step) + 1;
-			const seedA = Math.random() * 100;
-			const seedB = Math.random() * 100;
-			profile = Array.from({ length: count }, (_, i) => {
-				const n1 = Math.sin(i * 0.45 + seedA) * 6;
-				const n2 = Math.sin(i * 1.1 + seedB) * 3;
-				const jitter = (Math.random() - 0.5) * 4;
-				return { x: i * step, base: Math.max(4, 13 + n1 + n2 + jitter), growth: 0 };
-			});
-
-			sparkles = Array.from({ length: Math.max(6, Math.round(width / 90)) }, () => {
-				const p = profile[Math.floor(Math.random() * profile.length)];
-				return {
-					x: p.x + (Math.random() - 0.5) * step,
-					y: height - p.base - Math.random() * 3,
-					phase: Math.random() * Math.PI * 2,
-				};
-			});
-		}
-
-		function createFlake(startAbove: boolean): Flake {
-			return {
-				x: Math.random() * width,
-				y: startAbove ? -6 : Math.random() * height,
-				radius: Math.random() * 1.6 + 1.4,
-				speed: Math.random() * 0.5 + 0.5,
-				wobble: Math.random() * Math.PI * 2,
-				wobbleSpeed: Math.random() * 0.02 + 0.01,
-				opacity: Math.random() * 0.4 + 0.5,
-			};
-		}
-
-		function surfaceYAt(x: number) {
-			const index = Math.min(profile.length - 1, Math.max(0, Math.round(x / step)));
-			const p = profile[index];
-			return { index, y: height - p.base - p.growth };
-		}
-
-		// Traces the top edge of the pile as a smooth curve through each profile
-		// point (quadratic segments through midpoints), left open so it can be
-		// reused for both the fill (closed to the baseline) and a thin rim stroke.
-		function traceTop() {
-			ctx!.beginPath();
-			ctx!.moveTo(profile[0].x, height - profile[0].base - profile[0].growth);
-			for (let i = 0; i < profile.length - 1; i++) {
-				const p0 = profile[i];
-				const p1 = profile[i + 1];
-				const y0 = height - p0.base - p0.growth;
-				const y1 = height - p1.base - p1.growth;
-				const midX = (p0.x + p1.x) / 2;
-				const midY = (y0 + y1) / 2;
-				ctx!.quadraticCurveTo(p0.x, y0, midX, midY);
-			}
-			const last = profile[profile.length - 1];
-			ctx!.lineTo(last.x, height - last.base - last.growth);
-		}
-
-		function drawBank() {
-			traceTop();
-			ctx!.lineTo(width, height);
-			ctx!.lineTo(0, height);
-			ctx!.closePath();
-			ctx!.fillStyle = bankGradient!;
-			ctx!.fill();
-
-			traceTop();
-			ctx!.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-			ctx!.lineWidth = 1.5;
-			ctx!.stroke();
-
-			for (const sparkle of sparkles) {
-				const twinkle = 0.35 + Math.sin(time * 1.5 + sparkle.phase) * 0.3;
-				ctx!.globalAlpha = Math.max(0, twinkle);
-				ctx!.fillStyle = '#ffffff';
-				ctx!.beginPath();
-				ctx!.arc(sparkle.x, sparkle.y, 1.1, 0, Math.PI * 2);
-				ctx!.fill();
-			}
-			ctx!.globalAlpha = 1;
-		}
-
-		function resize() {
-			const rect = canvas!.getBoundingClientRect();
-			width = rect.width;
-			height = rect.height;
-			canvas!.width = width * dpr;
-			canvas!.height = height * dpr;
-			ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-			buildProfile();
-			bankGradient = ctx!.createLinearGradient(0, height - 40, 0, height);
-			bankGradient.addColorStop(0, '#ffffff');
-			bankGradient.addColorStop(1, '#d7e2f0');
-			const target = Math.round(width / 70);
-			flakes = Array.from({ length: Math.min(24, Math.max(8, target)) }, () => createFlake(false));
-		}
-
-		function tick() {
-			time += 0.02;
-			ctx!.clearRect(0, 0, width, height);
-
-			// Bank first, so falling flakes visually pass in front of the pile
-			// until they land and get folded back into it.
-			drawBank();
-
-			for (const flake of flakes) {
-				flake.wobble += flake.wobbleSpeed;
-				flake.x += Math.sin(flake.wobble) * 0.4;
-				flake.y += flake.speed;
-
-				if (flake.x > width + 6) flake.x = -6;
-				if (flake.x < -6) flake.x = width + 6;
-
-				const { index, y: surfaceY } = surfaceYAt(flake.x);
-
-				if (flake.y + flake.radius >= surfaceY) {
-					profile[index].growth = Math.min(maxGrowth, profile[index].growth + 0.5);
-					Object.assign(flake, createFlake(true));
-					continue;
-				}
-
-				const size = (flake.radius / 6) * flakeSprite.width;
-				ctx!.globalAlpha = flake.opacity;
-				ctx!.drawImage(flakeSprite, flake.x - size / 2, flake.y - size / 2, size, size);
-			}
-			ctx!.globalAlpha = 1;
-
-			// The pile settles slowly over time so it stays dynamic instead of
-			// permanently maxing out while the footer sits in view.
-			for (const p of profile) p.growth *= 0.999;
-
-			if (running) animationFrame = requestAnimationFrame(tick);
-		}
-
-		function start() {
-			if (running) return;
-			running = true;
-			animationFrame = requestAnimationFrame(tick);
-		}
-
-		function stop() {
-			running = false;
-			cancelAnimationFrame(animationFrame);
-		}
-
-		resize();
-
-		if (prefersReducedMotion) {
-			const drawStatic = () => {
-				ctx!.clearRect(0, 0, width, height);
-				traceTop();
-				ctx!.lineTo(width, height);
-				ctx!.lineTo(0, height);
-				ctx!.closePath();
-				ctx!.fillStyle = bankGradient!;
-				ctx!.fill();
-			};
-			drawStatic();
-			window.addEventListener('resize', () => {
-				resize();
-				drawStatic();
-			});
-		} else {
-			const observer = new IntersectionObserver(
-				([entry]) => {
-					inView = entry.isIntersecting;
-					if (inView && !document.hidden) start();
-					else stop();
-				},
-				{ rootMargin: '100px' },
-			);
-			observer.observe(canvas);
-
-			document.addEventListener('visibilitychange', () => {
-				if (document.hidden) stop();
-				else if (inView) start();
-			});
-
-			window.addEventListener('resize', resize);
-		}
-	}
-</script>
