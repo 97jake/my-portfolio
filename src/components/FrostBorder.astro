@@ -1,0 +1,57 @@
+<div class="frost-border" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+	<filter id="frost-crystal" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+		<!-- Turbulence-driven displacement pushes the smooth corner gradients out
+		     into long, uneven crystal fingers instead of a round blob. -->
+		<feTurbulence type="fractalNoise" baseFrequency="0.013 0.02" numOctaves="5" seed="7" result="noise" />
+		<feDisplacementMap
+			in="SourceGraphic"
+			in2="noise"
+			scale="140"
+			xChannelSelector="R"
+			yChannelSelector="G"
+			result="displaced"
+		/>
+
+		<!-- Steepen the alpha falloff so edges read as crisp facets rather than a
+		     soft gradient fade. -->
+		<feComponentTransfer in="displaced">
+			<feFuncA type="gamma" amplitude="1.6" exponent="2.6" offset="0" />
+		</feComponentTransfer>
+	</filter>
+</svg>
+
+<style>
+	/* Sides and bottom only -- no frost along the top edge. Just the crisp
+	   white crystal shapes, nothing else -- no wash, no glow, no soft blur
+	   layer. The page background itself is blue enough to give this contrast. */
+	.frost-border {
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		z-index: 40;
+		filter: url(#frost-crystal);
+		background:
+			radial-gradient(
+				ellipse 420px 330px at 0% 100%,
+				rgba(255, 255, 255, 0.98) 0%,
+				rgba(255, 255, 255, 0.7) 25%,
+				transparent 60%
+			),
+			radial-gradient(
+				ellipse 420px 330px at 100% 100%,
+				rgba(255, 255, 255, 0.98) 0%,
+				rgba(255, 255, 255, 0.7) 25%,
+				transparent 60%
+			),
+			linear-gradient(
+				to right,
+				rgba(255, 255, 255, 0.7),
+				transparent 5%,
+				transparent 95%,
+				rgba(255, 255, 255, 0.7)
+			),
+			linear-gradient(to top, rgba(255, 255, 255, 0.7), transparent 8%);
+	}
+</style>

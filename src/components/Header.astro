@@ -1,15 +1,18 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+import SnowflakeIcon from './SnowflakeIcon.astro';
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2>
+			<a href="/"><SnowflakeIcon size={20} class="brand-icon" />{SITE_TITLE}</a>
+		</h2>
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href="/#contact">Contact</HeaderLink>
 		</div>
 		<div class="social-links">
 			<a href="https://github.com/97jake" target="_blank">
@@ -26,10 +29,25 @@ import HeaderLink from './HeaderLink.astro';
 </header>
 <style>
 	header {
+		position: sticky;
+		top: 0;
+		z-index: 41;
 		margin: 0;
 		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		background: rgba(255, 255, 255, 0.58);
+		backdrop-filter: blur(14px) saturate(160%);
+		-webkit-backdrop-filter: blur(14px) saturate(160%);
+		box-shadow:
+			0 2px 12px rgba(var(--black), 6%),
+			inset 0 1px 0 rgba(255, 255, 255, 0.6);
+		border-bottom: 3px solid;
+		border-image: linear-gradient(
+				90deg,
+				var(--accent-purple),
+				var(--accent),
+				var(--accent-teal)
+			)
+			1;
 	}
 	h2 {
 		margin: 0;
@@ -38,7 +56,16 @@ import HeaderLink from './HeaderLink.astro';
 
 	h2 a,
 	h2 a.active {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		color: var(--accent-dark);
 		text-decoration: none;
+	}
+
+	h2 a .brand-icon {
+		color: var(--accent-teal);
+		flex-shrink: 0;
 	}
 	nav {
 		display: flex;
@@ -47,11 +74,16 @@ import HeaderLink from './HeaderLink.astro';
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
+		color: rgb(var(--black));
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
+		transition: color 0.15s ease;
+	}
+	nav a:hover {
+		color: var(--accent);
 	}
 	nav a.active {
+		color: var(--accent);
 		text-decoration: none;
 		border-bottom-color: var(--accent);
 	}

@@ -5,23 +5,38 @@
  */
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
+	--accent: #3f7cc4;
+	--accent-dark: #24507f;
+	--accent-teal: #3fb8cc;
+	--accent-teal-dark: #21798c;
+	--accent-purple: #5a4fc9;
+	--accent-purple-dark: #362f88;
+	--tint-blue: #eef3f9;
+	--tint-teal: #eaf7f9;
+	--tint-purple: #eeedf9;
+	--accent-rgb: 63, 124, 196;
+	--accent-teal-rgb: 63, 184, 204;
+	--accent-purple-rgb: 90, 79, 201;
 	--black: 15, 18, 25;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
+	--gray-gradient: rgba(var(--gray-light), 50%), #a9cdee;
 	--box-shadow:
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
 		0 16px 32px rgba(var(--gray), 33%);
+}
+html {
+	scroll-padding-top: 96px;
 }
 body {
 	font-family: var(--font-atkinson);
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
+	background-color: #a9cdee;
+	background-image: linear-gradient(var(--gray-gradient));
+	background-repeat: no-repeat;
 	background-size: 100% 600px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
@@ -66,9 +81,10 @@ b {
 }
 a {
 	color: var(--accent);
+	transition: color 0.15s ease;
 }
 a:hover {
-	color: var(--accent);
+	color: var(--accent-dark);
 }
 p {
 	margin-bottom: 1em;

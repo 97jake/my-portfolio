@@ -1,8 +1,48 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FrostBorder from '../components/FrostBorder.astro';
 import Header from '../components/Header.astro';
+import Snowfall from '../components/Snowfall.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { Image } from 'astro:assets';
+import HeroPhoto from '../assets/headshot.jpg';
+
+const services = [
+	{
+		title: 'AI/ML Pipeline Development',
+		description:
+			"Custom pipelines that take your data from raw to production-ready — model training, deployment, and the infrastructure to keep it running reliably.",
+	},
+	{
+		title: 'AI Strategy Consulting',
+		description:
+			"Not sure where AI fits in your business yet? I'll help you find the highest-leverage use cases and map out a realistic path to get there.",
+	},
+	{
+		title: 'Software & Web Development',
+		description:
+			'Full-stack development for the products and internal tools your business runs on — fast, maintainable, and built to scale with you.',
+	},
+];
+
+const steps = [
+	{
+		number: '1',
+		title: 'Discover',
+		description: 'We talk through your goals, constraints, and what success looks like.',
+	},
+	{
+		number: '2',
+		title: 'Build',
+		description: 'I design and build in the open, with regular check-ins so there are no surprises.',
+	},
+	{
+		number: '3',
+		title: 'Deliver',
+		description: 'You get working software, documentation, and support — not just a handoff.',
+	},
+];
 ---
 
 <!doctype html>
@@ -11,19 +51,348 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
+		<Snowfall />
+		<FrostBorder />
 		<Header />
 		<main>
-			<h2>Welcome to {SITE_TITLE}!</h2>
-			<p>
-				Since I graduated with my degree in Applied Mathematics in 2022, I've been dedicated to 
-				building next-generation AI/ML pipelines. AI has the potential to completely change how 
-				you do business, and I want to help you unlock that potential.
-			</p>
-			<p>
-				If you've wanted to add AI to your business or improve how you're using it right now, 
-				let's talk!
-			</p>
+			<section class="hero">
+				<div class="hero-text">
+					<p class="eyebrow">AI &amp; Software Development</p>
+					<h1>I build the AI pipelines and software that move your business forward.</h1>
+					<p class="lede">
+						I'm Jake Snow, an Applied Mathematics grad turned software developer. I help
+						businesses design, build, and ship AI/ML pipelines and full-stack web applications —
+						from first idea to production.
+					</p>
+					<div class="cta-row">
+						<a class="button" href="mailto:97jake@gmail.com">Get in touch</a>
+						<a class="button-secondary" href="#services">See what I do</a>
+					</div>
+				</div>
+				<div class="hero-image">
+					<Image src={HeroPhoto} alt="Jake Snow" width={400} height={600} />
+				</div>
+			</section>
+
+			<section id="services" class="services">
+				<h2>What I do</h2>
+				<div class="service-grid">
+					{
+						services.map((service) => (
+							<div class="service-card">
+								<h3>{service.title}</h3>
+								<p>{service.description}</p>
+							</div>
+						))
+					}
+				</div>
+			</section>
+
+			<section class="process">
+				<h2>How I work</h2>
+				<ol class="process-steps">
+					{
+						steps.map((step) => (
+							<li>
+								<span class="step-number">{step.number}</span>
+								<h3>{step.title}</h3>
+								<p>{step.description}</p>
+							</li>
+						))
+					}
+				</ol>
+			</section>
+
+			<section id="contact" class="cta-band">
+				<h2>Have a project in mind?</h2>
+				<p>Tell me what you're working on — I'd love to hear about it.</p>
+				<a class="button button-inverse" href="mailto:97jake@gmail.com?subject=Consulting%20Inquiry"
+					>Email Me</a
+				>
+			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	main {
+		width: 100%;
+		max-width: 1080px;
+		padding-top: 2em;
+	}
+
+	section {
+		margin-bottom: 5em;
+	}
+
+	.eyebrow {
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85em;
+		font-weight: 700;
+		color: var(--accent-teal-dark);
+		margin-bottom: 0.5em;
+	}
+
+	.hero {
+		display: flex;
+		align-items: center;
+		gap: 3em;
+		background: linear-gradient(120deg, var(--tint-blue), var(--tint-teal));
+		border-radius: 24px;
+		padding: 3em;
+	}
+
+	.hero-text {
+		flex: 1 1 55%;
+	}
+
+	.hero-text h1 {
+		font-size: 2.6em;
+		line-height: 1.15;
+	}
+
+	.hero-text .lede {
+		font-size: 1.05em;
+		color: rgb(var(--gray-dark));
+	}
+
+	.hero-image {
+		flex: 0 0 auto;
+		max-width: 280px;
+	}
+
+	.hero-image :global(img) {
+		width: 100%;
+		height: auto;
+		box-shadow: var(--box-shadow);
+	}
+
+	.cta-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1em;
+		margin-top: 1.5em;
+	}
+
+	.button,
+	.button-secondary {
+		display: inline-block;
+		padding: 0.75em 1.5em;
+		border-radius: 8px;
+		font-weight: 700;
+		text-decoration: none;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
+	}
+
+	.button {
+		background: var(--accent);
+		color: white;
+	}
+
+	.button:hover {
+		background: var(--accent-dark);
+		color: white;
+		box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
+	}
+
+	.button-secondary {
+		background: transparent;
+		color: var(--accent);
+		border: 2px solid var(--accent);
+	}
+
+	.button-secondary:hover {
+		background: var(--accent);
+		color: white;
+		box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
+	}
+
+	.services h2,
+	.process h2,
+	.cta-band h2 {
+		text-align: center;
+		margin-bottom: 1em;
+	}
+
+	.service-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.5em;
+	}
+
+	.service-card {
+		background: white;
+		border-radius: 12px;
+		border-top: 4px solid transparent;
+		padding: 1.75em;
+		box-shadow: var(--box-shadow);
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease;
+	}
+
+	.service-card:hover {
+		transform: translateY(-4px);
+	}
+
+	.service-card h3 {
+		font-size: 1.25em;
+	}
+
+	.service-card p {
+		margin-bottom: 0;
+		font-size: 0.95em;
+	}
+
+	.service-card:nth-child(1) {
+		border-top-color: var(--accent);
+		background: var(--tint-blue);
+	}
+
+	.service-card:nth-child(1) h3 {
+		color: var(--accent-dark);
+	}
+
+	.service-card:nth-child(1):hover {
+		box-shadow: 0 16px 32px rgba(var(--accent-rgb), 0.25);
+	}
+
+	.service-card:nth-child(2) {
+		border-top-color: var(--accent-teal);
+		background: var(--tint-teal);
+	}
+
+	.service-card:nth-child(2) h3 {
+		color: var(--accent-teal-dark);
+	}
+
+	.service-card:nth-child(2):hover {
+		box-shadow: 0 16px 32px rgba(var(--accent-teal-rgb), 0.25);
+	}
+
+	.service-card:nth-child(3) {
+		border-top-color: var(--accent-purple);
+		background: var(--tint-purple);
+	}
+
+	.service-card:nth-child(3) h3 {
+		color: var(--accent-purple-dark);
+	}
+
+	.service-card:nth-child(3):hover {
+		box-shadow: 0 16px 32px rgba(var(--accent-purple-rgb), 0.25);
+	}
+
+	.process {
+		background: var(--tint-purple);
+		border-radius: 24px;
+		padding: 3em;
+	}
+
+	.process-steps {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2em;
+		text-align: center;
+	}
+
+	.step-number {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25em;
+		height: 2.25em;
+		border-radius: 50%;
+		background: var(--accent);
+		color: white;
+		font-weight: 700;
+		margin-bottom: 0.5em;
+	}
+
+	.process-steps li:nth-child(1) .step-number {
+		background: var(--accent);
+	}
+
+	.process-steps li:nth-child(2) .step-number {
+		background: var(--accent-teal);
+	}
+
+	.process-steps li:nth-child(3) .step-number {
+		background: var(--accent-purple);
+	}
+
+	.process-steps h3 {
+		margin-top: 0.5em;
+	}
+
+	.process-steps p {
+		font-size: 0.95em;
+		margin-bottom: 0;
+	}
+
+	.cta-band {
+		background: linear-gradient(135deg, var(--accent-purple), var(--accent), var(--accent-teal));
+		color: white;
+		text-align: center;
+		border-radius: 16px;
+		padding: 3em 2em;
+		margin-bottom: 1em;
+	}
+
+	.cta-band p {
+		font-size: 1.1em;
+	}
+
+	.button-inverse {
+		background: white;
+		color: var(--accent-dark);
+	}
+
+	.button-inverse:hover {
+		background: rgb(var(--gray-light));
+		color: var(--accent-dark);
+	}
+
+	@media (max-width: 900px) {
+		.service-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.hero {
+			flex-direction: column-reverse;
+			gap: 2em;
+			padding: 1.75em;
+		}
+
+		.hero-image {
+			max-width: 220px;
+		}
+
+		.hero-text h1 {
+			font-size: 2em;
+		}
+
+		.process {
+			padding: 1.75em 1.25em;
+		}
+
+		.process-steps {
+			grid-template-columns: 1fr;
+			gap: 2.5em;
+		}
+
+		section {
+			margin-bottom: 3.5em;
+		}
+	}
+</style>
