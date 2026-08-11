@@ -1,0 +1,365 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const pageDescription = 'Experience, projects, education, and skills.';
+
+const experience = [
+	{
+		title: 'Senior Machine Learning Engineer',
+		dateRange: 'January 2024 – August 2026',
+		company: 'VideoAmp (AdTech)',
+		location: 'Remote',
+		bullets: [
+			'Built an ML Engineering Agent for Claude Code that enforces style conventions and automates code reviews to standardize development practices across the ML Ops team',
+			'Directed the design, evaluation, and execution of a cross-team overhaul of ML Ops API standards',
+			'Designed and deployed end-to-end machine learning pipelines on 100M+ row datasets in Snowflake, enabling data-driven decision-making across internal and client-facing teams',
+			'Collaborated with Data Scientists to implement and optimize complex feature engineering and model training tasks, reducing runtime and compute costs by up to 70%',
+		],
+	},
+	{
+		title: 'Data Engineer',
+		dateRange: 'June 2022 – January 2024',
+		company: 'VideoAmp (AdTech)',
+		location: 'Remote',
+		bullets: [
+			'Optimized large-scale SQL and Python ETLs, reducing runtimes from 2 hours to 10 minutes and ensuring deterministic data delivery across distributed systems',
+			'Wrote and maintained production level ETLs triggered by Airflow; extracted data from AWS object storage, transformed using Databricks, and loaded into Snowflake',
+			'Redefined key data quality metrics to ensure consistent downstream delivery; created monitoring and alerting dashboards in Tableau and Snowflake',
+		],
+	},
+];
+
+const projects = [
+	{
+		title: 'FizzPal (Soda Tracking App)',
+		dateRange: 'June 2026 – Present',
+		bullets: [
+			'Designed, wrote, and independently deployed a Swift-based app that allows users to log the sodas they drink, track where they drink them, rate the soda quality, and see different metrics like ounces consumed',
+			'Met with primary users (my wife) to translate desired functionality into concrete feature designs',
+		],
+	},
+];
+
+const education = [
+	{
+		degree: 'BS, Applied & Computational Mathematics Emphasis',
+		date: 'April 2022',
+		school: 'Brigham Young University',
+		location: 'Provo, Utah',
+		detail: 'Emphasis: Data Science and Machine Learning',
+	},
+];
+
+const skills = [
+	{
+		category: 'Programming Languages',
+		items: ['Python', 'Go', 'SQL', 'HTML'],
+	},
+	{
+		category: 'AI & Analytics Tools',
+		items: ['Snowflake', 'Claude', 'Databricks', 'DataDog', 'Tableau'],
+	},
+	{
+		category: 'Frameworks & Libraries',
+		items: ['Snowpark', 'Airflow', 'Sklearn', 'Spark', 'Django', 'TensorFlow', 'PyTorch'],
+	},
+	{
+		category: 'Cloud & DevOps',
+		items: ['AWS (S3, EC2, Lambda, IAM)', 'Linux', 'Docker', 'Git', 'CircleCI', 'Kubernetes'],
+	},
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Experience | ${SITE_TITLE}`} description={pageDescription} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-header">
+				<p class="eyebrow">Resume</p>
+				<h1>Experience</h1>
+			</section>
+
+			<section class="resume-card">
+				<div class="entries">
+					{
+						experience.map((job) => (
+							<article class="entry">
+								<div class="entry-header">
+									<h3>{job.title}</h3>
+									<span class="date-range">{job.dateRange}</span>
+								</div>
+								<p class="entry-subheader">
+									{job.company} <span class="divider">·</span> {job.location}
+								</p>
+								<ul>
+									{job.bullets.map((bullet) => (
+										<li>{bullet}</li>
+									))}
+								</ul>
+							</article>
+						))
+					}
+				</div>
+
+				<h2 class="subsection-heading">Projects</h2>
+				<div class="entries">
+					{
+						projects.map((project) => (
+							<article class="entry">
+								<div class="entry-header">
+									<h3>{project.title}</h3>
+									<span class="date-range">{project.dateRange}</span>
+								</div>
+								<ul>
+									{project.bullets.map((bullet) => (
+										<li>{bullet}</li>
+									))}
+								</ul>
+							</article>
+						))
+					}
+				</div>
+
+				<h2 class="subsection-heading">Education</h2>
+				<div class="entries">
+					{
+						education.map((school) => (
+							<article class="entry">
+								<div class="entry-header">
+									<h3>{school.degree}</h3>
+									<span class="date-range">{school.date}</span>
+								</div>
+								<p class="entry-subheader">
+									{school.school} <span class="divider">·</span> {school.location}
+								</p>
+								<p class="entry-detail">{school.detail}</p>
+							</article>
+						))
+					}
+				</div>
+
+				<h2 class="subsection-heading">Skills</h2>
+				<div class="skills-grid">
+					{
+						skills.map((group) => (
+							<div class="skill-group">
+								<p class="skill-category">{group.category}</p>
+								<div class="skill-tags">
+									{group.items.map((item) => (
+										<span class="skill-tag">{item}</span>
+									))}
+								</div>
+							</div>
+						))
+					}
+				</div>
+			</section>
+
+			<section id="contact" class="cta-band">
+				<h2>Have a project in mind?</h2>
+				<p>Tell me what you're working on — I'd love to hear about it.</p>
+				<a class="button button-inverse" href="mailto:97jake@gmail.com?subject=Consulting%20Inquiry"
+					>Email Me</a
+				>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: 100%;
+		max-width: 1080px;
+		padding-top: 2em;
+	}
+
+	section {
+		margin-bottom: 5em;
+	}
+
+	.eyebrow {
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 0.85em;
+		font-weight: 700;
+		color: var(--accent-teal-dark);
+		margin-bottom: 0.5em;
+	}
+
+	.page-header {
+		margin-bottom: 2em;
+	}
+
+	.page-header h1 {
+		font-size: 2.6em;
+	}
+
+	.resume-card {
+		background: var(--tint-blue);
+		border-radius: 12px;
+		border-top: 4px solid var(--accent);
+		padding: 2.5em;
+		box-shadow: var(--box-shadow);
+	}
+
+	.subsection-heading {
+		margin-top: 2em;
+		padding-top: 1em;
+		border-top: 1px solid rgba(var(--gray), 0.25);
+		color: var(--accent-dark);
+	}
+
+	.entries {
+		display: flex;
+		flex-direction: column;
+		gap: 1.75em;
+	}
+
+	.entry-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5em;
+	}
+
+	.entry-header h3 {
+		font-size: 1.15em;
+		margin-bottom: 0;
+	}
+
+	.date-range {
+		flex-shrink: 0;
+		font-size: 0.85em;
+		font-weight: 700;
+		color: rgb(var(--gray));
+		white-space: nowrap;
+	}
+
+	.entry-subheader {
+		font-weight: 700;
+		color: var(--accent-dark);
+		margin: 0.15em 0 0.75em 0;
+	}
+
+	.entry-detail {
+		margin: 0.25em 0 0 0;
+		font-size: 0.95em;
+		color: rgb(var(--gray-dark));
+	}
+
+	.divider {
+		color: rgb(var(--gray));
+	}
+
+	.entry ul {
+		margin: 0;
+		padding-left: 1.2em;
+	}
+
+	.entry li {
+		margin-bottom: 0.5em;
+		font-size: 0.95em;
+	}
+
+	.entry li:last-child {
+		margin-bottom: 0;
+	}
+
+	.skills-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+	}
+
+	.skill-category {
+		font-weight: 700;
+		color: var(--accent-dark);
+		margin: 0 0 0.5em 0;
+		font-size: 0.95em;
+	}
+
+	.skill-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+	}
+
+	.skill-tag {
+		background: white;
+		border: 1px solid rgba(var(--accent-rgb), 0.3);
+		border-radius: 999px;
+		padding: 0.3em 0.85em;
+		font-size: 0.85em;
+		color: var(--accent-dark);
+	}
+
+	.cta-band {
+		background: linear-gradient(135deg, var(--accent-purple), var(--accent), var(--accent-teal));
+		color: white;
+		text-align: center;
+		border-radius: 16px;
+		padding: 3em 2em;
+		margin-bottom: 1em;
+	}
+
+	.cta-band h2 {
+		text-align: center;
+		margin-bottom: 1em;
+	}
+
+	.cta-band p {
+		font-size: 1.1em;
+	}
+
+	.button,
+	.button-inverse {
+		display: inline-block;
+		padding: 0.75em 1.5em;
+		border-radius: 8px;
+		font-weight: 700;
+		text-decoration: none;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
+	}
+
+	.button-inverse {
+		background: white;
+		color: var(--accent-dark);
+	}
+
+	.button-inverse:hover {
+		background: rgb(var(--gray-light));
+		color: var(--accent-dark);
+	}
+
+	@media (max-width: 720px) {
+		.resume-card {
+			padding: 1.5em;
+		}
+
+		.entry-header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.15em;
+		}
+
+		.page-header h1 {
+			font-size: 2em;
+		}
+
+		section {
+			margin-bottom: 3.5em;
+		}
+	}
+</style>
