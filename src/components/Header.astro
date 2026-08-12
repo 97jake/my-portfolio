@@ -97,4 +97,26 @@ import SnowflakeIcon from './SnowflakeIcon.astro';
 			display: none;
 		}
 	}
+	@media (max-width: 600px) {
+		nav {
+			flex-wrap: wrap;
+			justify-content: center;
+			row-gap: 0.25em;
+			padding: 0.75em 0;
+		}
+		h2 {
+			flex: 1 0 100%;
+			text-align: center;
+		}
+		h2 a {
+			justify-content: center;
+			white-space: nowrap;
+		}
+		.internal-links {
+			flex: 1 0 100%;
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+	}
 </style>
