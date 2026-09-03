@@ -6,16 +6,20 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "NETLIFY_DEV=1 astro dev --host 127.0.0.1",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.49",
     "@astrojs/mdx": "^5.0.6",
+    "@astrojs/netlify": "^7.0.13",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
+    "ai": "^7.0.91",
     "astro": "^6.3.7",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.3",
+    "zod": "^4.5.4"
   }
 }
