@@ -55,13 +55,13 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 	main {
 		width: 100%;
 		max-width: 820px;
-		padding-top: 2em;
+		padding-top: 1em;
 	}
 
 	.chat-page {
 		display: flex;
 		flex-direction: column;
-		gap: 1.5em;
+		gap: 0.85em;
 	}
 
 	.chat-intro {
@@ -130,7 +130,7 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 		border-radius: 16px;
 		box-shadow: var(--box-shadow);
 		overflow: hidden;
-		height: 65vh;
+		height: 90vh;
 		min-height: 420px;
 	}
 
@@ -236,6 +236,94 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 		background: #111214;
 		border-radius: 14px;
 		padding: 0.5em 1em 0.5em 0.5em;
+		border: 2px solid transparent;
+		width: 100%;
+		font: inherit;
+		text-align: left;
+		color: inherit;
+		cursor: pointer;
+		transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+	}
+
+	:global(.chat-log .song-card:hover:not(:disabled)) {
+		border-color: rgba(255, 255, 255, 0.25);
+	}
+
+	:global(.chat-log .song-card:active:not(:disabled)) {
+		transform: scale(0.98);
+	}
+
+	:global(.chat-log .song-card.selected) {
+		border-color: var(--accent);
+		background: #1a1d22;
+	}
+
+	:global(.chat-log .song-card:disabled) {
+		cursor: default;
+		opacity: 0.75;
+	}
+
+	/* playlist_preview cards are plain divs, not buttons — read-only, no
+	   hover/active affordance since there's nothing to click. */
+	:global(.chat-log .song-card.read-only) {
+		cursor: default;
+	}
+
+	:global(.chat-log .song-card.read-only:hover) {
+		border-color: transparent;
+	}
+
+	:global(.chat-log .song-check) {
+		flex: 0 0 auto;
+		width: 20px;
+		height: 20px;
+		margin-left: auto;
+		border-radius: 50%;
+		border: 2px solid rgba(255, 255, 255, 0.3);
+		position: relative;
+		transition: border-color 0.15s ease, background-color 0.15s ease;
+	}
+
+	:global(.chat-log .song-card.selected .song-check) {
+		border-color: var(--accent);
+		background: var(--accent);
+	}
+
+	:global(.chat-log .song-card.selected .song-check::after) {
+		content: '';
+		position: absolute;
+		left: 6px;
+		top: 2px;
+		width: 5px;
+		height: 9px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+	}
+
+	:global(.chat-log .song-list-confirm) {
+		align-self: flex-start;
+		margin-top: 0.2em;
+		padding: 0.5em 1.1em;
+		border-radius: 20px;
+		border: none;
+		background: var(--accent);
+		color: white;
+		font-family: var(--font-atkinson);
+		font-weight: 700;
+		font-size: 0.85em;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+	}
+
+	:global(.chat-log .song-list-confirm:hover:not(:disabled)) {
+		background: var(--accent-dark);
+	}
+
+	:global(.chat-log .song-list-confirm:disabled) {
+		background: rgb(var(--gray-light));
+		color: rgb(var(--gray));
+		cursor: default;
 	}
 
 	:global(.chat-log .song-art) {
@@ -374,7 +462,7 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 
 	@media (max-width: 600px) {
 		.chat-window {
-			height: 70vh;
+			height: 90vh;
 			border-radius: 12px;
 		}
 
@@ -474,14 +562,55 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 	}
 
 	interface Track {
+		uri: string;
 		name: string;
 		artists: string[];
 		albumImage: string | null;
 	}
 
-	const MAX_SONG_CARDS = 8;
+	// Must match the `tracks` array's .max(30) in the present_songs tool schema
+	// (src/lib/spotify/tools.ts) — a lower cap here would silently drop cards
+	// for tracks that still get added to the playlist (create_playlist gets
+	// its own track list, independent of what's rendered).
+	const MAX_SONG_CARDS = 30;
 
-	function renderSongCards(tracks: Track[]) {
+	type PresentMode = 'seed_candidates' | 'playlist_preview';
+
+	function buildCardContent(track: Track): DocumentFragment {
+		const art = document.createElement('div');
+		art.className = 'song-art';
+		if (track.albumImage) {
+			const img = document.createElement('img');
+			img.src = track.albumImage;
+			img.alt = '';
+			art.appendChild(img);
+		}
+
+		const info = document.createElement('div');
+		info.className = 'song-info';
+
+		const title = document.createElement('div');
+		title.className = 'song-title';
+		title.textContent = track.name;
+
+		const artist = document.createElement('div');
+		artist.className = 'song-artist';
+		artist.textContent = track.artists.join(', ');
+
+		info.append(title, artist);
+
+		const fragment = document.createDocumentFragment();
+		fragment.append(art, info);
+		return fragment;
+	}
+
+	// Renders present_songs results. "seed_candidates" cards are selectable —
+	// the visitor's picks become the playlist's seed song(s) — with a confirm
+	// button that reports the selection back into the chat. "playlist_preview"
+	// cards are read-only: a preview of exactly what's about to be created,
+	// with a single "Create Playlist" button that gates the actual
+	// create_playlist call behind the visitor's confirmation.
+	function renderSongCards(tracks: Track[], mode: PresentMode) {
 		if (tracks.length === 0) return;
 
 		const row = document.createElement('div');
@@ -492,33 +621,74 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 		const list = document.createElement('div');
 		list.className = 'song-list';
 
-		for (const track of tracks.slice(0, MAX_SONG_CARDS)) {
-			const card = document.createElement('div');
-			card.className = 'song-card';
+		if (mode === 'seed_candidates') {
+			const selected = new Map<string, Track>();
 
-			const art = document.createElement('div');
-			art.className = 'song-art';
-			if (track.albumImage) {
-				const img = document.createElement('img');
-				img.src = track.albumImage;
-				img.alt = '';
-				art.appendChild(img);
+			const confirmBtn = document.createElement('button');
+			confirmBtn.type = 'button';
+			confirmBtn.className = 'song-list-confirm';
+			confirmBtn.hidden = true;
+
+			function updateConfirmButton() {
+				confirmBtn.hidden = selected.size === 0;
+				confirmBtn.textContent = `Use ${selected.size} selected song${selected.size === 1 ? '' : 's'}`;
 			}
 
-			const info = document.createElement('div');
-			info.className = 'song-info';
+			for (const track of tracks.slice(0, MAX_SONG_CARDS)) {
+				const card = document.createElement('button');
+				card.type = 'button';
+				card.className = 'song-card';
+				card.setAttribute('aria-pressed', 'false');
+				card.appendChild(buildCardContent(track));
 
-			const title = document.createElement('div');
-			title.className = 'song-title';
-			title.textContent = track.name;
+				const check = document.createElement('div');
+				check.className = 'song-check';
+				card.appendChild(check);
 
-			const artist = document.createElement('div');
-			artist.className = 'song-artist';
-			artist.textContent = track.artists.join(', ');
+				card.addEventListener('click', () => {
+					const isSelected = card.classList.toggle('selected');
+					card.setAttribute('aria-pressed', String(isSelected));
+					if (isSelected) {
+						selected.set(track.uri, track);
+					} else {
+						selected.delete(track.uri);
+					}
+					updateConfirmButton();
+				});
 
-			info.append(title, artist);
-			card.append(art, info);
-			list.appendChild(card);
+				list.appendChild(card);
+			}
+
+			confirmBtn.addEventListener('click', () => {
+				if (sending || selected.size === 0) return;
+				for (const card of Array.from(list.children) as HTMLButtonElement[]) {
+					card.disabled = true;
+				}
+				confirmBtn.disabled = true;
+				confirmBtn.textContent = 'Songs added to the conversation';
+				sendSeedSelection(Array.from(selected.values()));
+			});
+
+			list.appendChild(confirmBtn);
+		} else {
+			for (const track of tracks.slice(0, MAX_SONG_CARDS)) {
+				const card = document.createElement('div');
+				card.className = 'song-card read-only';
+				card.appendChild(buildCardContent(track));
+				list.appendChild(card);
+			}
+
+			const createBtn = document.createElement('button');
+			createBtn.type = 'button';
+			createBtn.className = 'song-list-confirm';
+			createBtn.textContent = 'Create Playlist';
+			createBtn.addEventListener('click', () => {
+				if (sending) return;
+				createBtn.disabled = true;
+				createBtn.textContent = 'Creating playlist…';
+				sendPlaylistConfirmation();
+			});
+			list.appendChild(createBtn);
 		}
 
 		row.appendChild(list);
@@ -526,15 +696,20 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 		scrollToBottom();
 	}
 
-	function tracksFromToolResult(name: string, output: unknown): Track[] {
-		if (!output || typeof output !== 'object') return [];
-		if (name === 'search_spotify' && Array.isArray((output as { tracks?: unknown }).tracks)) {
-			return (output as { tracks: Track[] }).tracks;
-		}
-		if (name === 'get_library_tracks' && Array.isArray(output)) {
-			return output as Track[];
-		}
-		return [];
+	interface PresentSongsResult {
+		tracks: Track[];
+		mode: PresentMode;
+	}
+
+	// present_songs is the only tool whose results ever reach the visitor —
+	// search_spotify and get_library_tracks are frequently used by the model
+	// just to think, over far more tracks than should ever be shown, so their
+	// raw output is intentionally never rendered.
+	function parsePresentSongsResult(name: string, output: unknown): PresentSongsResult | null {
+		if (name !== 'present_songs' || !output || typeof output !== 'object') return null;
+		const { tracks, mode } = output as { tracks?: unknown; mode?: unknown };
+		if (!Array.isArray(tracks) || tracks.length === 0) return null;
+		return { tracks: tracks as Track[], mode: mode === 'playlist_preview' ? 'playlist_preview' : 'seed_candidates' };
 	}
 
 	function setSending(value: boolean) {
@@ -554,7 +729,37 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 	async function sendMessage(text: string) {
 		chatHistory.push({ role: 'user', content: text });
 		appendMessage('user', text);
+		await requestAssistantReply();
+	}
 
+	// Sends the user's seed-song picks as a plain-text turn carrying their URIs
+	// (so the model can use them directly instead of re-searching), while the
+	// visible bubble stays human-readable.
+	async function sendSeedSelection(tracks: Track[]) {
+		const describe = (t: Track) => `"${t.name}" by ${t.artists.join(', ')}`;
+		appendMessage('user', `Let's use: ${tracks.map(describe).join(', ')}`);
+		chatHistory.push({
+			role: 'user',
+			content: `I like these songs for the playlist — use them as seed tracks: ${tracks
+				.map((t) => `${describe(t)} (${t.uri})`)
+				.join(', ')}.`,
+		});
+		await requestAssistantReply();
+	}
+
+	// Sent when the visitor clicks "Create Playlist" on a playlist_preview —
+	// the model is instructed to wait for exactly this confirmation before it
+	// actually calls create_playlist.
+	async function sendPlaylistConfirmation() {
+		appendMessage('user', 'Create the playlist with those tracks.');
+		chatHistory.push({
+			role: 'user',
+			content: 'Looks good — go ahead and create the playlist with exactly those tracks.',
+		});
+		await requestAssistantReply();
+	}
+
+	async function requestAssistantReply() {
 		// The stream alternates between "status" bubbles (narrating a tool call)
 		// and "text" bubbles (the actual reply). Each mode switch starts a fresh
 		// bubble so a finished message never gets silently appended to later —
@@ -637,12 +842,20 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 						openBubble!.innerHTML = renderMarkdownLite(assistantText);
 						scrollToBottom();
 					} else if (payload.type === 'tool') {
-						openStatusBubble(describeToolUse(payload.name));
-						scrollToBottom();
+						// present_songs is a pure UI signal, not an action worth narrating —
+						// its cards speak for themselves once the tool-result arrives.
+						if (payload.name !== 'present_songs') {
+							openStatusBubble(describeToolUse(payload.name));
+							scrollToBottom();
+						}
 					} else if (payload.type === 'tool-result') {
-						const tracks = tracksFromToolResult(payload.name, payload.output);
-						if (tracks.length > 0) {
-							renderSongCards(tracks);
+						const presented = parsePresentSongsResult(payload.name, payload.output);
+						if (presented) {
+							// present_songs skips the status bubble, so if it's the first
+							// tool call this turn, the placeholder "typing" bubble is still
+							// open and needs clearing before the cards render.
+							if (openMode === 'pending') openRow!.remove();
+							renderSongCards(presented.tracks, presented.mode);
 							// The status bubble narrating the tool call is now stale; the
 							// next event (more tool calls or the reply) should open fresh.
 							openMode = null;

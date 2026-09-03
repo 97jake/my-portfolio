@@ -106,5 +106,49 @@ export function createSpotifyTools(cookies: AstroCookies): ToolSet {
 				return withAccessToken((accessToken) => getLibraryTracks(accessToken, options));
 			},
 		}),
+
+		// Pure UI signal — makes no Spotify API call. search_spotify and
+		// get_library_tracks are often used just to think (checking many more
+		// tracks than should ever reach the visitor), so the app only renders
+		// track cards in the chat when this tool is called, never from raw
+		// search/library output.
+		present_songs: tool({
+			description:
+				'Show a curated set of tracks to the visitor as cards. Call this with ONLY the tracks you ' +
+				'specifically want the visitor to see — never the full/raw output of search_spotify or ' +
+				'get_library_tracks. Set mode to "seed_candidates" to offer a handful of tracks the visitor can pick ' +
+				'a seed from (rendered as selectable cards with a confirm button). Set mode to "playlist_preview" to ' +
+				'show the exact tracks you intend to add before creating the playlist (rendered read-only with a ' +
+				'"Create Playlist" button) — you must call this before create_playlist and wait for the visitor to ' +
+				'confirm; never call create_playlist in the same turn you show a preview. Accepts at most 30 tracks ' +
+				'per call — if the visitor wants a bigger playlist than that, tell them 30 is the max for now. This ' +
+				'tool does not modify anything in Spotify.',
+			inputSchema: z.object({
+				mode: z
+					.enum(['seed_candidates', 'playlist_preview'])
+					.describe(
+						'"seed_candidates" lets the visitor pick a seed song from options. "playlist_preview" shows ' +
+							'the final track list you intend to create, before you create it.',
+					),
+				tracks: z
+					.array(
+						z.object({
+							uri: z.string().describe('Spotify track URI, from a prior search_spotify or get_library_tracks result.'),
+							name: z.string(),
+							artists: z.array(z.string()),
+							albumImage: z.string().nullable().optional(),
+						}),
+					)
+					.min(1)
+					.max(30),
+			}),
+			execute: async ({
+				mode,
+				tracks,
+			}: {
+				mode: 'seed_candidates' | 'playlist_preview';
+				tracks: Array<{ uri: string; name: string; artists: string[]; albumImage?: string | null }>;
+			}) => ({ mode, tracks }),
+		}),
 	};
 }
