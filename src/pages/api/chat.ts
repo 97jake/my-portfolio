@@ -28,6 +28,11 @@ const SYSTEM_PROMPT =
 	"present_songs suggestions. When the visitor's message lists songs they picked (formatted like \"title\" " +
 	'by artist (spotify:track:...)), treat those as the confirmed seeds and use the given URIs directly ' +
 	'instead of searching again.\n\n' +
+	'Playlist construction rules: unless the visitor says otherwise, a playlist should have at least 10 and ' +
+	'at most 30 songs, and no more than 3 songs by any one artist. Before presenting a playlist_preview, ' +
+	'check the track order for flow, each song should feel like it builds on the one before it (tempo, ' +
+	'energy, mood, or genre), so the whole thing tells a story rather than reading as a random collection. ' +
+	'Reorder tracks as needed to achieve that arc before calling present_songs.\n\n' +
 	'Playlist preview: once you have a seed, decide the full set of tracks for the playlist (search_spotify ' +
 	'and get_library_tracks as needed) and call present_songs with mode "playlist_preview" listing every ' +
 	'track you intend to add. Do NOT call create_playlist in that same turn — stop and wait for the visitor ' +
