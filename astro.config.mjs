@@ -10,6 +10,12 @@ export default defineConfig({
 	site: 'https://jake-snow.netlify.app/',
 	adapter: netlify(),
 	integrations: [mdx(), sitemap()],
+	markdown: {
+		shikiConfig: {
+			theme: 'dracula',
+			wrap: true,
+		},
+	},
 	fonts: [
 		{
 			provider: fontProviders.local(),

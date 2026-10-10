@@ -118,13 +118,16 @@ code {
 	padding: 2px 5px;
 	background-color: rgb(var(--gray-light));
 	border-radius: 2px;
+	font-size: 0.85em;
 }
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
+	overflow-x: auto;
 }
 pre > code {
 	all: unset;
+	font-size: 0.85em;
 }
 blockquote {
 	border-left: 4px solid var(--accent);
@@ -135,6 +138,26 @@ blockquote {
 hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-light));
+}
+details {
+	margin: 0 0 1.5em;
+	padding: 1em 1.2em;
+	border: 1px solid rgb(var(--gray-light));
+	border-radius: 8px;
+}
+details[open] {
+	padding-bottom: 1.2em;
+}
+details > summary {
+	cursor: pointer;
+	font-weight: 700;
+	color: var(--accent);
+}
+details[open] > summary {
+	margin-bottom: 1em;
+}
+details > summary::marker {
+	color: var(--accent);
 }
 @media (max-width: 720px) {
 	body {

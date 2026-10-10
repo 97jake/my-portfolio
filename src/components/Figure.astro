@@ -1,0 +1,32 @@
+---
+interface Props {
+	src: string;
+	alt: string;
+	caption?: string;
+}
+
+const { src, alt, caption } = Astro.props;
+---
+
+<figure class="chart-figure">
+	<img src={src} alt={alt} />
+	{caption && <figcaption>{caption}</figcaption>}
+</figure>
+<style>
+	.chart-figure {
+		margin: 2em 0;
+		text-align: center;
+	}
+	.chart-figure img {
+		display: inline-block;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+		box-shadow: var(--box-shadow);
+	}
+	figcaption {
+		margin-top: 0.6em;
+		font-size: 0.9em;
+		font-style: italic;
+		color: rgb(var(--gray));
+	}
+</style>

@@ -9,7 +9,8 @@
     "dev": "NETLIFY_DEV=1 astro dev --host 127.0.0.1",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "new-post": "node scripts/ipynb-to-mdx.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.49",

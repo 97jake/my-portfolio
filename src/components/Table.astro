@@ -1,0 +1,42 @@
+---
+interface Props {
+	html: string;
+}
+
+const { html } = Astro.props;
+---
+
+<div class="table-wrap" set:html={html} />
+<style>
+	.table-wrap {
+		margin: 0 0 1.5em;
+		overflow-x: auto;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+	}
+	.table-wrap :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		font-family: monospace;
+		font-size: 0.85em;
+	}
+	.table-wrap :global(th),
+	.table-wrap :global(td) {
+		padding: 0.5em 0.8em;
+		text-align: right;
+		white-space: nowrap;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+	.table-wrap :global(thead th) {
+		background: var(--tint-blue);
+		color: rgb(var(--black));
+		font-weight: 700;
+	}
+	.table-wrap :global(tbody tr:last-child td),
+	.table-wrap :global(tbody tr:last-child th) {
+		border-bottom: none;
+	}
+	.table-wrap :global(tbody tr:nth-child(even)) {
+		background: rgba(var(--gray-light), 40%);
+	}
+</style>
