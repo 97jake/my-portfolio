@@ -56,7 +56,7 @@ const hobbies = [
 				<div class="hero-text">
 					<p class="eyebrow">About Me</p>
 					<h1>Jake Snow</h1>
-					<p class="tagline">AI Engineering Consultant — Building Pipelines that Scale</p>
+					<p class="tagline">Software developer — website redesign &amp; development</p>
 					<p class="lede">
 						Hello, and welcome to my personal website! I want to build a relationship of trust
 						with the people I work with, and the best way of developing trust is by truly getting
@@ -85,8 +85,8 @@ const hobbies = [
 			<section id="contact" class="cta-band">
 				<h2>Have a project in mind?</h2>
 				<p>Tell me what you're working on — I'd love to hear about it.</p>
-				<a class="button button-inverse" href="mailto:97jake@gmail.com?subject=Consulting%20Inquiry"
-					>Email Me</a
+				<a class="button-inverse" href="mailto:97jake@gmail.com?subject=Consulting%20Inquiry"
+					>Email me</a
 				>
 			</section>
 		</main>
@@ -100,88 +100,73 @@ const hobbies = [
 		max-width: 1080px;
 		padding-top: 2em;
 	}
-
 	section {
-		margin-bottom: 5em;
+		margin-bottom: 4em;
 	}
-
 	.eyebrow {
+		margin: 0 0 14px;
+		font-size: 12px;
+		letter-spacing: 0.14em;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-size: 0.85em;
+		color: var(--accent);
 		font-weight: 700;
-		color: var(--accent-teal-dark);
-		margin-bottom: 0.5em;
 	}
-
 	.hero {
 		display: flex;
 		align-items: center;
 		gap: 3em;
-		background: linear-gradient(120deg, var(--tint-blue), var(--tint-teal));
-		border-radius: 24px;
-		padding: 3em;
+		padding: 2em 1em 0;
 	}
-
 	.hero-text {
 		flex: 1 1 55%;
 	}
-
 	.hero-text h1 {
-		font-size: 2.6em;
-		line-height: 1.15;
-		margin-bottom: 0.2em;
+		margin: 0 0 10px;
+		font-weight: 700;
+		font-size: clamp(32px, 6vw, 52px);
+		line-height: 1.04;
+		letter-spacing: -0.025em;
+		color: rgb(var(--ink));
 	}
-
 	.hero-text .tagline {
 		font-weight: 700;
-		color: var(--accent-dark);
-		margin-bottom: 1em;
+		font-size: 16px;
+		color: rgb(var(--ink));
+		margin: 0 0 16px;
 	}
-
 	.hero-text .lede {
-		font-size: 1.05em;
-		color: rgb(var(--gray-dark));
+		font-size: 15px;
+		line-height: 1.6;
+		color: rgb(var(--ink-2));
+		max-width: 62ch;
 	}
-
 	.hero-image {
 		flex: 0 0 auto;
 		max-width: 240px;
 	}
-
 	.hero-image :global(img) {
 		width: 100%;
 		height: auto;
 		border-radius: 16px;
+		transform: rotate(2deg);
 		box-shadow: var(--box-shadow);
 	}
-
 	.hobby-cards {
 		display: flex;
 		flex-direction: column;
 		gap: 1.25em;
-		max-width: 460px;
+		max-width: 560px;
 		margin: 0 auto;
 	}
-
 	.hobby-card {
 		display: flex;
 		gap: 1em;
 		align-items: flex-start;
-		background: white;
+		background: var(--card);
+		border: 1px solid var(--line);
 		border-radius: 14px;
-		border-left: 4px solid transparent;
 		padding: 1.5em;
-		box-shadow: var(--box-shadow);
-		transition:
-			transform 0.2s ease,
-			box-shadow 0.2s ease;
 	}
-
-	.hobby-card:hover {
-		transform: translateY(-4px) scale(1.02);
-	}
-
 	.hobby-icon {
 		flex: 0 0 auto;
 		display: flex;
@@ -191,126 +176,65 @@ const hobbies = [
 		height: 2.75em;
 		border-radius: 50%;
 		font-size: 1.4em;
+		background: var(--tint-blue);
 	}
-
 	.hobby-body h3 {
-		font-size: 1.1em;
+		font-size: 1.05em;
 		margin-bottom: 0.4em;
+		color: rgb(var(--ink));
 	}
-
 	.hobby-body p {
 		margin-bottom: 0;
 		font-size: 0.95em;
-		color: rgb(var(--gray-dark));
+		color: rgb(var(--ink-2));
 	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 1) {
-		border-left-color: var(--accent);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 1) .hobby-icon {
-		background: var(--tint-blue);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 1) h3 {
-		color: var(--accent-dark);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 1):hover {
-		box-shadow: 0 16px 32px rgba(var(--accent-rgb), 0.25);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 2) {
-		border-left-color: var(--accent-teal);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 2) .hobby-icon {
-		background: var(--tint-teal);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 2) h3 {
-		color: var(--accent-teal-dark);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 2):hover {
-		box-shadow: 0 16px 32px rgba(var(--accent-teal-rgb), 0.25);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 3) {
-		border-left-color: var(--accent-purple);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 3) .hobby-icon {
-		background: var(--tint-purple);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 3) h3 {
-		color: var(--accent-purple-dark);
-	}
-
-	.hobby-cards .hobby-card:nth-child(3n + 3):hover {
-		box-shadow: 0 16px 32px rgba(var(--accent-purple-rgb), 0.25);
-	}
-
 	.cta-band {
-		background: linear-gradient(135deg, var(--accent-purple), var(--accent), var(--accent-teal));
-		color: white;
+		background: rgb(var(--ink));
+		color: #fbf8f3;
 		text-align: center;
 		border-radius: 16px;
 		padding: 3em 2em;
 		margin-bottom: 1em;
 	}
-
 	.cta-band h2 {
-		text-align: center;
-		margin-bottom: 1em;
+		color: #fbf8f3;
+		margin-bottom: 0.5em;
 	}
-
 	.cta-band p {
-		font-size: 1.1em;
+		font-size: 1.05em;
+		color: rgba(251, 248, 243, 0.75);
+		margin-bottom: 1.5em;
 	}
-
-	.button,
 	.button-inverse {
-		display: inline-block;
-		padding: 0.75em 1.5em;
-		border-radius: 8px;
+		display: inline-flex;
+		align-items: center;
+		min-height: 46px;
+		padding: 0 22px;
+		border-radius: 999px;
+		font-size: 15px;
 		font-weight: 700;
 		text-decoration: none;
-		transition:
-			background-color 0.2s ease,
-			color 0.2s ease,
-			box-shadow 0.2s ease;
+		background: #fbf8f3;
+		color: rgb(var(--ink));
 	}
-
-	.button-inverse {
-		background: white;
-		color: var(--accent-dark);
-	}
-
 	.button-inverse:hover {
-		background: rgb(var(--gray-light));
-		color: var(--accent-dark);
+		background: var(--accent);
+		color: #fbf8f3;
 	}
-
 	@media (max-width: 720px) {
 		.hero {
 			flex-direction: column;
 			gap: 1.5em;
-			padding: 1.75em;
-			text-align: center;
+			padding: 1em 1em 0;
 		}
-
 		.hero-image {
 			max-width: 200px;
 		}
-
-		.hero-text h1 {
-			font-size: 2em;
-		}
-
 		section {
-			margin-bottom: 3.5em;
+			margin-bottom: 3em;
+		}
+		.cta-band {
+			padding: 2.5em 1.5em;
 		}
 	}
 </style>
