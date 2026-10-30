@@ -1,5 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
@@ -10,10 +9,6 @@ import { SITE_TITLE } from '../../consts';
 // Rendered on demand so new Substack posts appear without a rebuild.
 // Netlify's CDN caches the rendered page for a few minutes.
 export const prerender = false;
-
-const localPosts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
 
 let substackPosts: SubstackPost[] = [];
 let feedFailed = false;
@@ -70,23 +65,6 @@ Astro.response.headers.set(
 				)
 			}
 
-			{
-				localPosts.length > 0 && (
-					<section class="section">
-						<h2>On this site</h2>
-						<div class="list">
-							{localPosts.map((post) => (
-								<a class="item" href={`/blog/${post.id}/`}>
-									<span class="item-name">{post.data.title}</span>
-									<span class="item-meta">
-										<FormattedDate date={post.data.pubDate} />
-									</span>
-								</a>
-							))}
-						</div>
-					</section>
-				)
-			}
 		</main>
 		<Footer />
 	</body>
