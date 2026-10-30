@@ -1,44 +1,22 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { Image } from 'astro:assets';
 import HeroPhoto from '../assets/headshot.jpg';
 
-const services = [
+const work = [
 	{
-		title: 'AI/ML Pipeline Development',
-		description:
-			"Custom pipelines that take your data from raw to production-ready — model training, deployment, and the infrastructure to keep it running reliably.",
-	},
-	{
-		title: 'AI Strategy Consulting',
-		description:
-			"Not sure where AI fits in your business yet? I'll help you find the highest-leverage use cases and map out a realistic path to get there.",
-	},
-	{
-		title: 'Software & Web Development',
-		description:
-			'Full-stack development for the products and internal tools your business runs on — fast, maintainable, and built to scale with you.',
+		name: 'FizzPal',
+		detail: 'A soda-tracking iOS app: designed, built, and shipped independently',
+		meta: 'Swift · 2026',
+		href: 'https://github.com/97jake/fizz-pal',
 	},
 ];
 
-const steps = [
+const writing = [
 	{
-		number: '1',
-		title: 'Discover',
-		description: 'We talk through your goals, constraints, and what success looks like.',
-	},
-	{
-		number: '2',
-		title: 'Build',
-		description: 'I design and build in the open, with regular check-ins so there are no surprises.',
-	},
-	{
-		number: '3',
-		title: 'Deliver',
-		description: 'You get working software, documentation, and support — not just a handoff.',
+		name: 'Predicting a Hit',
+		meta: 'Oct 10, 2026',
+		href: '/blog/predicting-a-hit/',
 	},
 ];
 ---
@@ -46,349 +24,354 @@ const steps = [
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead
+			title="Jake Snow — Website redesign & development"
+			description="I redesign business websites to be fast, sharp, and built to win you work. Website redesign and development by Jake Snow, software developer in Arlington, VA."
+		/>
 	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="hero">
-				<div class="hero-text">
-					<p class="eyebrow">AI &amp; Software Development</p>
-					<h1>I build the AI pipelines and software that move your business forward.</h1>
-					<p class="lede">
-						I'm Jake Snow, an Applied Mathematics grad turned software developer. I help
-						businesses design, build, and ship AI/ML pipelines and full-stack web applications —
-						from first idea to production.
-					</p>
-					<div class="cta-row">
-						<a class="button" href="mailto:97jake@gmail.com">Get in touch</a>
-						<a class="button-secondary" href="#services">See what I do</a>
+	<body class="home">
+		<div class="page">
+			<nav class="nav" aria-label="Main navigation">
+				<a class="logo" href="/">Jake Snow</a>
+				<div class="nav-links">
+					<a href="#work">Work</a>
+					<a href="#writing">Writing</a>
+					<a href="#about">About</a>
+					<a href="/experience">Experience</a>
+					<a href="/blog">Blog</a>
+					<a href="/contact">Contact</a>
+				</div>
+			</nav>
+
+			<main>
+				<section class="hero">
+					<div class="hero-text">
+						<p class="eyebrow">Website redesign &amp; development</p>
+						<h1>Websites that move your business forward.</h1>
+						<p class="sub">
+							I'm Jake Snow, a software developer in Arlington, VA. I redesign business
+							websites to be fast, sharp, and built to win you work, with the same
+							engineering rigor I spent four years applying at VideoAmp.
+						</p>
+						<div class="ctas">
+							<a class="cta-primary" href="mailto:97jake@gmail.com">Get in touch</a>
+							<a class="cta-secondary" href="#work">See my work</a>
+						</div>
 					</div>
-				</div>
-				<div class="hero-image">
-					<Image src={HeroPhoto} alt="Jake Snow" width={400} height={600} />
-				</div>
-			</section>
+					<Image
+						class="photo"
+						src={HeroPhoto}
+						alt="Jake Snow"
+						width={480}
+						height={600}
+					/>
+				</section>
+			</main>
 
-			<section id="services" class="services">
-				<h2>What I do</h2>
-				<div class="service-grid">
-					{
-						services.map((service) => (
-							<div class="service-card">
-								<h3>{service.title}</h3>
-								<p>{service.description}</p>
-							</div>
-						))
-					}
+			<div class="marquee" aria-hidden="true">
+				<div class="marquee-track">
+					<span>Redesign</span><span>·</span><span>Web development</span><span>·</span><span>AI pipelines</span><span>·</span><span>Strategy</span><span>·</span>
+					<span>Redesign</span><span>·</span><span>Web development</span><span>·</span><span>AI pipelines</span><span>·</span><span>Strategy</span><span>·</span>
+					<span>Redesign</span><span>·</span><span>Web development</span><span>·</span><span>AI pipelines</span><span>·</span><span>Strategy</span><span>·</span>
 				</div>
-			</section>
+			</div>
 
-			<section class="process">
-				<h2>How I work</h2>
-				<ol class="process-steps">
-					{
-						steps.map((step) => (
-							<li>
-								<span class="step-number">{step.number}</span>
-								<h3>{step.title}</h3>
-								<p>{step.description}</p>
-							</li>
-						))
-					}
-				</ol>
-			</section>
+			<main>
+				<section class="section" id="work">
+					<h2>Selected work</h2>
+					<div class="list">
+						{
+							work.map((item) => (
+								<a class="item" href={item.href}>
+									<span class="item-name">{item.name}</span>
+									<span class="item-detail">{item.detail}</span>
+									<span class="item-meta">{item.meta}</span>
+								</a>
+							))
+						}
+						<div class="item item-placeholder">
+							<span class="item-name">Your next project</span>
+							<span class="item-detail">This slot is ready for your first redesign case study</span>
+							<span class="item-meta">Placeholder</span>
+						</div>
+					</div>
+				</section>
 
-			<section id="contact" class="cta-band">
-				<h2>Have a project in mind?</h2>
-				<p>Tell me what you're working on — I'd love to hear about it.</p>
-				<a class="button button-inverse" href="mailto:97jake@gmail.com?subject=Consulting%20Inquiry"
-					>Email Me</a
-				>
-			</section>
-		</main>
-		<Footer />
+				<section class="section" id="writing">
+					<h2>Writing</h2>
+					<div class="list">
+						{
+							writing.map((item) => (
+								<a class="item" href={item.href}>
+									<span class="item-name">{item.name}</span>
+									<span class="item-meta">{item.meta}</span>
+								</a>
+							))
+						}
+					</div>
+				</section>
+
+				<section class="section" id="about">
+					<h2>About</h2>
+					<p class="body-text">
+						Applied math grad turned software developer. Previously Senior ML Engineer and
+						Data Engineer at VideoAmp: ML pipelines over 100M+ row datasets, ETL runtimes
+						cut from 2 hours to 10 minutes. Off the clock I'm birding, reading, at the
+						movies on my AMC A-List, or delivering groceries with the Arlington Food
+						Assistance Center. <a href="/about">More about me</a>.
+					</p>
+				</section>
+			</main>
+
+			<footer class="footer">
+				<a href="mailto:97jake@gmail.com">97jake@gmail.com</a>
+				<a href="https://github.com/97jake">github.com/97jake</a>
+			</footer>
+		</div>
 	</body>
 </html>
 
 <style>
+	:global(body.home) {
+		background: #f5efe7;
+		background-image: none;
+		color: #1f1a17;
+		font-size: 16px;
+		line-height: 1.55;
+	}
 	main {
-		width: 100%;
-		max-width: 1080px;
-		padding-top: 2em;
-	}
-
-	section {
-		margin-bottom: 5em;
-	}
-
-	.eyebrow {
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-size: 0.85em;
-		font-weight: 700;
-		color: var(--accent-teal-dark);
-		margin-bottom: 0.5em;
-	}
-
-	.hero {
-		display: flex;
-		align-items: center;
-		gap: 3em;
-		background: linear-gradient(120deg, var(--tint-blue), var(--tint-teal));
-		border-radius: 24px;
-		padding: 3em;
-	}
-
-	.hero-text {
-		flex: 1 1 55%;
-	}
-
-	.hero-text h1 {
-		font-size: 2.6em;
-		line-height: 1.15;
-	}
-
-	.hero-text .lede {
-		font-size: 1.05em;
-		color: rgb(var(--gray-dark));
-	}
-
-	.hero-image {
-		flex: 0 0 auto;
-		max-width: 280px;
-	}
-
-	.hero-image :global(img) {
-		width: 100%;
-		height: auto;
-		box-shadow: var(--box-shadow);
-	}
-
-	.cta-row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1em;
-		margin-top: 1.5em;
-	}
-
-	.button,
-	.button-secondary {
-		display: inline-block;
-		padding: 0.75em 1.5em;
-		border-radius: 8px;
-		font-weight: 700;
-		text-decoration: none;
-		transition:
-			background-color 0.2s ease,
-			color 0.2s ease,
-			box-shadow 0.2s ease;
-	}
-
-	.button {
-		background: var(--accent);
-		color: white;
-	}
-
-	.button:hover {
-		background: var(--accent-dark);
-		color: white;
-		box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
-	}
-
-	.button-secondary {
-		background: transparent;
-		color: var(--accent);
-		border: 2px solid var(--accent);
-	}
-
-	.button-secondary:hover {
-		background: var(--accent);
-		color: white;
-		box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.2);
-	}
-
-	.services h2,
-	.process h2,
-	.cta-band h2 {
-		text-align: center;
-		margin-bottom: 1em;
-	}
-
-	.service-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1.5em;
-	}
-
-	.service-card {
-		background: white;
-		border-radius: 12px;
-		border-top: 4px solid transparent;
-		padding: 1.75em;
-		box-shadow: var(--box-shadow);
-		transition:
-			transform 0.2s ease,
-			box-shadow 0.2s ease;
-	}
-
-	.service-card:hover {
-		transform: translateY(-4px);
-	}
-
-	.service-card h3 {
-		font-size: 1.25em;
-	}
-
-	.service-card p {
-		margin-bottom: 0;
-		font-size: 0.95em;
-	}
-
-	.service-card:nth-child(1) {
-		border-top-color: var(--accent);
-		background: var(--tint-blue);
-	}
-
-	.service-card:nth-child(1) h3 {
-		color: var(--accent-dark);
-	}
-
-	.service-card:nth-child(1):hover {
-		box-shadow: 0 16px 32px rgba(var(--accent-rgb), 0.25);
-	}
-
-	.service-card:nth-child(2) {
-		border-top-color: var(--accent-teal);
-		background: var(--tint-teal);
-	}
-
-	.service-card:nth-child(2) h3 {
-		color: var(--accent-teal-dark);
-	}
-
-	.service-card:nth-child(2):hover {
-		box-shadow: 0 16px 32px rgba(var(--accent-teal-rgb), 0.25);
-	}
-
-	.service-card:nth-child(3) {
-		border-top-color: var(--accent-purple);
-		background: var(--tint-purple);
-	}
-
-	.service-card:nth-child(3) h3 {
-		color: var(--accent-purple-dark);
-	}
-
-	.service-card:nth-child(3):hover {
-		box-shadow: 0 16px 32px rgba(var(--accent-purple-rgb), 0.25);
-	}
-
-	.process {
-		background: var(--tint-purple);
-		border-radius: 24px;
-		padding: 3em;
-	}
-
-	.process-steps {
-		list-style: none;
+		width: auto;
+		max-width: none;
 		margin: 0;
 		padding: 0;
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 2em;
-		text-align: center;
 	}
-
-	.step-number {
+	.page {
+		--cream: #f5efe7;
+		--ink: #1f1a17;
+		--ink-2: #6b6157;
+		--accent: #c2521e;
+		--line: #e3dacd;
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+	.nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 20px 28px;
+	}
+	.logo {
+		font-weight: 700;
+		font-size: 20px;
+		letter-spacing: -0.02em;
+		color: var(--ink);
+		text-decoration: none;
+	}
+	.nav-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 22px;
+	}
+	.nav-links a {
+		color: var(--ink-2);
+		text-decoration: none;
+		font-size: 14px;
+		min-height: 32px;
 		display: inline-flex;
 		align-items: center;
-		justify-content: center;
-		width: 2.25em;
-		height: 2.25em;
-		border-radius: 50%;
-		background: var(--accent);
-		color: white;
+	}
+	.nav-links a:hover {
+		color: var(--ink);
+	}
+	.hero {
+		display: flex;
+		gap: 32px;
+		align-items: center;
+		flex-wrap: wrap;
+		padding: 44px 28px 52px;
+	}
+	.hero-text {
+		flex: 1 1 320px;
+		min-width: 0;
+	}
+	.eyebrow {
+		margin: 0 0 14px;
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--accent);
 		font-weight: 700;
-		margin-bottom: 0.5em;
 	}
-
-	.process-steps li:nth-child(1) .step-number {
-		background: var(--accent);
+	h1 {
+		margin: 0 0 18px;
+		font-weight: 700;
+		font-size: clamp(34px, 7vw, 60px);
+		line-height: 1.04;
+		letter-spacing: -0.025em;
+		color: var(--ink);
 	}
-
-	.process-steps li:nth-child(2) .step-number {
-		background: var(--accent-teal);
+	.sub {
+		margin: 0 0 26px;
+		font-size: 16px;
+		line-height: 1.55;
+		color: var(--ink-2);
+		max-width: 46ch;
 	}
-
-	.process-steps li:nth-child(3) .step-number {
-		background: var(--accent-purple);
+	.ctas {
+		display: flex;
+		gap: 12px;
+		flex-wrap: wrap;
 	}
-
-	.process-steps h3 {
-		margin-top: 0.5em;
+	.cta-primary,
+	.cta-secondary {
+		display: inline-flex;
+		align-items: center;
+		min-height: 46px;
+		padding: 0 22px;
+		border-radius: 999px;
+		font-size: 15px;
+		font-weight: 700;
+		text-decoration: none;
 	}
-
-	.process-steps p {
-		font-size: 0.95em;
-		margin-bottom: 0;
+	.cta-primary {
+		background: var(--ink);
+		color: #fbf8f3;
 	}
-
-	.cta-band {
-		background: linear-gradient(135deg, var(--accent-purple), var(--accent), var(--accent-teal));
-		color: white;
-		text-align: center;
+	.cta-secondary {
+		border: 1px solid var(--ink);
+		color: var(--ink);
+	}
+	.photo {
+		flex: 0 1 240px;
+		width: 240px;
+		height: auto;
+		max-width: 46%;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
 		border-radius: 16px;
-		padding: 3em 2em;
-		margin-bottom: 1em;
+		transform: rotate(2deg);
+		box-shadow: 0 18px 40px -18px rgba(31, 26, 23, 0.45);
 	}
-
-	.cta-band p {
-		font-size: 1.1em;
+	.marquee {
+		overflow: hidden;
+		border-top: 1px solid var(--line);
+		border-bottom: 1px solid var(--line);
 	}
-
-	.button-inverse {
-		background: white;
-		color: var(--accent-dark);
+	.marquee-track {
+		display: flex;
+		gap: 28px;
+		width: max-content;
+		padding: 12px 0;
+		font-size: 13px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--ink-2);
+		animation: scroll 26s linear infinite;
 	}
-
-	.button-inverse:hover {
-		background: rgb(var(--gray-light));
-		color: var(--accent-dark);
-	}
-
-	@media (max-width: 900px) {
-		.service-grid {
-			grid-template-columns: 1fr;
+	@keyframes scroll {
+		to {
+			transform: translateX(-33.333%);
 		}
 	}
-
-	@media (max-width: 720px) {
-		.hero {
-			flex-direction: column-reverse;
-			gap: 2em;
-			padding: 1.75em;
+	.section {
+		padding: 36px 28px 8px;
+	}
+	h2 {
+		margin: 0 0 8px;
+		font-weight: 700;
+		font-size: 26px;
+		letter-spacing: -0.02em;
+		color: var(--ink);
+	}
+	.list {
+		display: flex;
+		flex-direction: column;
+	}
+	.item {
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+		flex-wrap: wrap;
+		padding: 16px 0;
+		border-bottom: 1px solid var(--line);
+		text-decoration: none;
+		color: inherit;
+	}
+	a.item:hover .item-name {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.item-name {
+		font-weight: 700;
+		font-size: 16px;
+	}
+	.item-detail {
+		color: var(--ink-2);
+		font-size: 14px;
+		flex: 1 1 200px;
+	}
+	.item-meta {
+		color: var(--ink-2);
+		font-size: 13px;
+		margin-left: auto;
+	}
+	.item-placeholder {
+		opacity: 0.62;
+		border-bottom-style: dashed;
+	}
+	.body-text {
+		margin: 0;
+		font-size: 15px;
+		line-height: 1.6;
+		color: var(--ink-2);
+		max-width: 62ch;
+	}
+	.body-text a {
+		color: var(--accent);
+	}
+	.footer {
+		display: flex;
+		gap: 24px;
+		flex-wrap: wrap;
+		margin-top: 36px;
+		padding: 22px 28px 26px;
+		border-top: 1px solid var(--line);
+	}
+	.footer a {
+		color: var(--ink-2);
+		font-size: 14px;
+		text-decoration: none;
+		min-height: 32px;
+		display: inline-flex;
+		align-items: center;
+	}
+	.footer a:hover {
+		color: var(--ink);
+	}
+	@media (max-width: 600px) {
+		.nav {
+			flex-direction: column;
+			gap: 2px;
+			padding: 12px 8px;
 		}
-
-		.hero-image {
-			max-width: 220px;
+		.nav-links {
+			justify-content: center;
+			gap: 4px 12px;
 		}
-
-		.hero-text h1 {
-			font-size: 2em;
+		.nav-links a {
+			font-size: 12.5px;
+			min-height: 30px;
 		}
-
-		.process {
-			padding: 1.75em 1.25em;
+		.photo {
+			max-width: 70%;
+			margin: 0 auto;
 		}
-
-		.process-steps {
-			grid-template-columns: 1fr;
-			gap: 2.5em;
-		}
-
-		section {
-			margin-bottom: 3.5em;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.marquee-track {
+			animation: none;
 		}
 	}
 </style>
