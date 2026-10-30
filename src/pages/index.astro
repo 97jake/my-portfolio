@@ -12,13 +12,6 @@ const work = [
 	},
 ];
 
-const writing = [
-	{
-		name: 'Predicting a Hit',
-		meta: 'Oct 10, 2026',
-		href: '/blog/predicting-a-hit/',
-	},
-];
 ---
 
 <!doctype html>
@@ -93,20 +86,6 @@ const writing = [
 							<span class="item-detail">This slot is ready for your first redesign case study</span>
 							<span class="item-meta">Placeholder</span>
 						</div>
-					</div>
-				</section>
-
-				<section class="section" id="writing">
-					<h2>Writing</h2>
-					<div class="list">
-						{
-							writing.map((item) => (
-								<a class="item" href={item.href}>
-									<span class="item-name">{item.name}</span>
-									<span class="item-meta">{item.meta}</span>
-								</a>
-							))
-						}
 					</div>
 				</section>
 
