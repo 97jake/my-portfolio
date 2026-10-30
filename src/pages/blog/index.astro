@@ -1,114 +1,176 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SUBSTACK_HOME, getSubstackPosts, type SubstackPost } from '../../lib/substack';
+import { SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
+// Rendered on demand so new Substack posts appear without a rebuild.
+// Netlify's CDN caches the rendered page for a few minutes.
+export const prerender = false;
+
+const localPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+let substackPosts: SubstackPost[] = [];
+let feedFailed = false;
+try {
+	substackPosts = await getSubstackPosts();
+} catch {
+	feedFailed = true;
+}
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+Astro.response.headers.set(
+	'Netlify-CDN-Cache-Control',
+	'public, durable, max-age=300, stale-while-revalidate=600',
 );
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: var(--accent);
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
+		<BaseHead title={`Blog | ${SITE_TITLE}`} description="Jake Snow's writing, published on The Snow Report (Substack)." />
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
+			<section class="page-header">
+				<p class="eyebrow">Blog</p>
+				<h1>Writing</h1>
+				<p class="sub">
+					My writing now lives on <a href={SUBSTACK_HOME} target="_blank" rel="noopener noreferrer">The Snow Report</a>,
+					my Substack. Subscribe there for new posts.
+				</p>
 			</section>
+
+			{
+				feedFailed ? (
+					<p class="feed-error">
+						Latest posts can't load right now. Read everything on{' '}
+						<a href={SUBSTACK_HOME} target="_blank" rel="noopener noreferrer">The Snow Report</a>.
+					</p>
+				) : (
+					<section class="section">
+						<div class="list">
+							{substackPosts.map((post) => (
+								<a class="item" href={post.link} target="_blank" rel="noopener noreferrer">
+									<span class="item-name">{post.title}</span>
+									{post.excerpt && <span class="item-detail">{post.excerpt}</span>}
+									<span class="item-meta">
+										<FormattedDate date={post.pubDate} />
+									</span>
+								</a>
+							))}
+						</div>
+					</section>
+				)
+			}
+
+			{
+				localPosts.length > 0 && (
+					<section class="section">
+						<h2>On this site</h2>
+						<div class="list">
+							{localPosts.map((post) => (
+								<a class="item" href={`/blog/${post.id}/`}>
+									<span class="item-name">{post.data.title}</span>
+									<span class="item-meta">
+										<FormattedDate date={post.data.pubDate} />
+									</span>
+								</a>
+							))}
+						</div>
+					</section>
+				)
+			}
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	main {
+		width: 100%;
+		max-width: 1080px;
+		padding-top: 2em;
+	}
+	.page-header {
+		padding: 1em 1em 0;
+		margin-bottom: 1.5em;
+	}
+	.eyebrow {
+		margin: 0 0 14px;
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--accent);
+		font-weight: 700;
+	}
+	.page-header h1 {
+		margin: 0 0 14px;
+		font-weight: 700;
+		font-size: clamp(32px, 6vw, 52px);
+		line-height: 1.04;
+		letter-spacing: -0.025em;
+		color: rgb(var(--ink));
+	}
+	.sub {
+		margin: 0;
+		font-size: 15px;
+		line-height: 1.6;
+		color: rgb(var(--ink-2));
+		max-width: 62ch;
+	}
+	.section {
+		padding: 1em 1em 0;
+	}
+	.section h2 {
+		margin: 0 0 8px;
+		font-weight: 700;
+		font-size: 26px;
+		letter-spacing: -0.02em;
+		color: rgb(var(--ink));
+	}
+	.list {
+		display: flex;
+		flex-direction: column;
+	}
+	.item {
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+		flex-wrap: wrap;
+		padding: 16px 0;
+		border-bottom: 1px solid var(--line);
+		text-decoration: none;
+		color: inherit;
+	}
+	a.item:hover .item-name {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.item-name {
+		font-weight: 700;
+		font-size: 16px;
+		color: rgb(var(--ink));
+	}
+	.item-detail {
+		color: rgb(var(--ink-2));
+		font-size: 14px;
+		flex: 1 1 200px;
+	}
+	.item-meta {
+		color: rgb(var(--ink-2));
+		font-size: 13px;
+		margin-left: auto;
+	}
+	.feed-error {
+		padding: 0 1em;
+		font-size: 15px;
+		color: rgb(var(--ink-2));
+	}
+</style>
