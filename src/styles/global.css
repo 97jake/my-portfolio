@@ -1,30 +1,35 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+  Site-wide design tokens. Cream/ink/burnt-orange system introduced with the
+  homepage redesign; legacy variable names are remapped to the new palette.
+*/
 
 :root {
-	--accent: #3f7cc4;
-	--accent-dark: #24507f;
-	--accent-teal: #3fb8cc;
-	--accent-teal-dark: #21798c;
-	--accent-purple: #5a4fc9;
-	--accent-purple-dark: #362f88;
-	--tint-blue: #eef3f9;
-	--tint-teal: #eaf7f9;
-	--tint-purple: #eeedf9;
-	--accent-rgb: 63, 124, 196;
-	--accent-teal-rgb: 63, 184, 204;
-	--accent-purple-rgb: 90, 79, 201;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #a9cdee;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	--cream: #f5efe7;
+	--card: #fbf8f3;
+	--ink: 31, 26, 23;
+	--ink-2: 107, 97, 87;
+	--line: #e3dacd;
+
+	--accent: #c2521e;
+	--accent-dark: #9a3f15;
+
+	/* legacy names kept working, remapped to the new palette */
+	--accent-teal: #c2521e;
+	--accent-teal-dark: #9a3f15;
+	--accent-purple: #c2521e;
+	--accent-purple-dark: #9a3f15;
+	--accent-rgb: 194, 82, 30;
+	--accent-teal-rgb: 194, 82, 30;
+	--accent-purple-rgb: 194, 82, 30;
+	--tint-blue: #f1e9dd;
+	--tint-teal: #f1e9dd;
+	--tint-purple: #f1e9dd;
+	--black: 31, 26, 23;
+	--gray: 107, 97, 87;
+	--gray-light: 227, 218, 205;
+	--gray-dark: 31, 26, 23;
+	--gray-gradient: rgba(var(--gray-light), 55%), var(--cream);
+	--box-shadow: 0 18px 40px -18px rgba(var(--ink), 0.45);
 }
 *,
 *::before,
@@ -32,7 +37,7 @@
 	box-sizing: border-box;
 }
 html {
-	scroll-padding-top: 96px;
+	scroll-padding-top: 32px;
 	overflow-x: hidden;
 }
 body {
@@ -41,15 +46,13 @@ body {
 	padding: 0;
 	overflow-x: hidden;
 	text-align: left;
-	background-color: #a9cdee;
-	background-image: linear-gradient(var(--gray-gradient));
-	background-repeat: no-repeat;
-	background-size: 100% 600px;
+	background-color: var(--cream);
+	background-image: none;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+	color: rgb(var(--ink-2));
+	font-size: 17px;
+	line-height: 1.6;
 }
 main {
 	width: 720px;
@@ -64,23 +67,24 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
-	line-height: 1.2;
+	color: rgb(var(--ink));
+	line-height: 1.15;
+	letter-spacing: -0.02em;
 }
 h1 {
-	font-size: 3.052em;
+	font-size: 2.6em;
 }
 h2 {
-	font-size: 2.441em;
+	font-size: 2em;
 }
 h3 {
-	font-size: 1.953em;
+	font-size: 1.5em;
 }
 h4 {
-	font-size: 1.563em;
+	font-size: 1.25em;
 }
 h5 {
-	font-size: 1.25em;
+	font-size: 1.1em;
 }
 strong,
 b {
@@ -117,7 +121,7 @@ img {
 code {
 	padding: 2px 5px;
 	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
+	border-radius: 4px;
 	font-size: 0.85em;
 }
 pre {
@@ -133,16 +137,16 @@ blockquote {
 	border-left: 4px solid var(--accent);
 	padding: 0 0 0 20px;
 	margin: 0;
-	font-size: 1.333em;
+	font-size: 1.25em;
 }
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+	border-top: 1px solid var(--line);
 }
 details {
 	margin: 0 0 1.5em;
 	padding: 1em 1.2em;
-	border: 1px solid rgb(var(--gray-light));
+	border: 1px solid var(--line);
 	border-radius: 8px;
 }
 details[open] {
@@ -161,7 +165,7 @@ details > summary::marker {
 }
 @media (max-width: 720px) {
 	body {
-		font-size: 18px;
+		font-size: 16px;
 	}
 	main {
 		padding: 1em;
@@ -176,12 +180,8 @@ details > summary::marker {
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
 	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
 	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
 	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
