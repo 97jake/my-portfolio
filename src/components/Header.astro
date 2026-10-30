@@ -1,123 +1,79 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
-import SnowflakeIcon from './SnowflakeIcon.astro';
 ---
 
 <header>
 	<nav>
-		<h2>
-			<a href="/"><SnowflakeIcon size={20} class="brand-icon" />{SITE_TITLE}</a>
-		</h2>
-		<div class="internal-links">
+		<a class="logo" href="/">{SITE_TITLE}</a>
+		<div class="nav-links">
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
 			<HeaderLink href="/experience">Experience</HeaderLink>
 			<HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/contact">Contact</HeaderLink>
 		</div>
-		<div class="social-links">
-			<a href="https://github.com/97jake" target="_blank">
-				<span class="sr-only">Go to Jake's GitHub</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
-					><path
-						fill="currentColor"
-						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-					></path></svg
-				>
-			</a>
-		</div>
 	</nav>
 </header>
 <style>
 	header {
-		position: sticky;
-		top: 0;
-		z-index: 41;
-		margin: 0;
-		padding: 0 1em;
-		background: rgba(255, 255, 255, 0.58);
-		backdrop-filter: blur(14px) saturate(160%);
-		-webkit-backdrop-filter: blur(14px) saturate(160%);
-		box-shadow:
-			0 2px 12px rgba(var(--black), 6%),
-			inset 0 1px 0 rgba(255, 255, 255, 0.6);
-		border-bottom: 3px solid;
-		border-image: linear-gradient(
-				90deg,
-				var(--accent-purple),
-				var(--accent),
-				var(--accent-teal)
-			)
-			1;
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
-
-	h2 a,
-	h2 a.active {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4em;
-		color: var(--accent-dark);
-		text-decoration: none;
-	}
-
-	h2 a .brand-icon {
-		color: var(--accent-teal);
-		flex-shrink: 0;
+		background: var(--cream);
+		border-bottom: 1px solid var(--line);
 	}
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 8px;
+		max-width: 1080px;
+		margin: 0 auto;
+		padding: 18px 28px;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: rgb(var(--black));
-		border-bottom: 4px solid transparent;
+	.logo {
+		font-weight: 700;
+		font-size: 20px;
+		letter-spacing: -0.02em;
+		color: rgb(var(--ink));
 		text-decoration: none;
-		transition: color 0.15s ease;
 	}
-	nav a:hover {
-		color: var(--accent);
-	}
-	nav a.active {
-		color: var(--accent);
-		text-decoration: none;
-		border-bottom-color: var(--accent);
-	}
-	.social-links,
-	.social-links a {
+	.nav-links {
 		display: flex;
+		flex-wrap: wrap;
+		gap: 22px;
 	}
-	@media (max-width: 720px) {
-		.social-links {
-			display: none;
-		}
+	.nav-links a {
+		color: rgb(var(--ink-2));
+		text-decoration: none;
+		font-size: 14px;
+		min-height: 32px;
+		display: inline-flex;
+		align-items: center;
+	}
+	.nav-links a:hover {
+		color: rgb(var(--ink));
+	}
+	.nav-links a.active {
+		color: rgb(var(--ink));
+		font-weight: 700;
+		text-decoration: underline;
+		text-underline-offset: 5px;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
 	}
 	@media (max-width: 600px) {
 		nav {
-			flex-wrap: wrap;
-			justify-content: center;
-			row-gap: 0.25em;
-			padding: 0.75em 0;
+			flex-direction: column;
+			gap: 2px;
+			padding: 12px 8px;
 		}
-		h2 {
-			flex: 1 0 100%;
-			text-align: center;
-		}
-		h2 a {
+		.nav-links {
 			justify-content: center;
-			white-space: nowrap;
+			gap: 4px 12px;
 		}
-		.internal-links {
-			flex: 1 0 100%;
-			display: flex;
-			justify-content: center;
-			flex-wrap: wrap;
+		.nav-links a {
+			font-size: 12.5px;
+			min-height: 30px;
 		}
 	}
 </style>
