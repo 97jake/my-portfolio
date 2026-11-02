@@ -10,6 +10,15 @@ export default defineConfig({
 	site: 'https://jake-snow.netlify.app/',
 	adapter: netlify(),
 	integrations: [mdx(), sitemap()],
+	vite: {
+		// Our CSP is script-src 'self' with no 'unsafe-inline', so small page
+		// scripts must never get inlined into the HTML (Vite's default
+		// assetsInlineLimit does this under 4kb) or the browser silently
+		// blocks them.
+		build: {
+			assetsInlineLimit: 0,
+		},
+	},
 	markdown: {
 		shikiConfig: {
 			theme: 'dracula',
