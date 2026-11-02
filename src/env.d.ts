@@ -5,6 +5,8 @@ interface ImportMetaEnv {
 	readonly SPOTIFY_CLIENT_ID: string;
 	readonly SPOTIFY_CLIENT_SECRET: string;
 	readonly SPOTIFY_REDIRECT_URI: string;
+	readonly CONFERENCE_RAG_BACKEND_URL: string;
+	readonly CONFERENCE_RAG_SHARED_SECRET: string;
 }
 
 interface ImportMeta {

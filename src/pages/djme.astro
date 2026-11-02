@@ -766,7 +766,7 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 		// consecutive events in the same mode update/grow the one open bubble.
 		let openRow: HTMLDivElement | null = null;
 		let openBubble: HTMLDivElement | null = null;
-		let openMode: 'pending' | 'status' | 'text' | null = null;
+		let openMode: 'pending' | 'status' | 'thinking' | 'text' | null = null;
 		let assistantText = '';
 
 		({ row: openRow, bubble: openBubble } = createBubble('assistant', '', { typing: true }));
@@ -798,6 +798,19 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 				({ row: openRow, bubble: openBubble } = createBubble('assistant', label));
 			}
 			openMode = 'status';
+		}
+
+		// Shows the same animated dots as the initial placeholder, for gaps where
+		// something is happening server-side but there's no text worth narrating
+		// yet (e.g. present_songs assembling cards) — so the chat never goes
+		// silent with no sign anything is still in progress.
+		function openThinkingBubble() {
+			if (openMode === 'thinking' || openMode === 'pending') {
+				openMode = 'thinking';
+				return;
+			}
+			({ row: openRow, bubble: openBubble } = createBubble('assistant', '', { typing: true }));
+			openMode = 'thinking';
 		}
 
 		try {
@@ -843,18 +856,22 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 						scrollToBottom();
 					} else if (payload.type === 'tool') {
 						// present_songs is a pure UI signal, not an action worth narrating —
-						// its cards speak for themselves once the tool-result arrives.
-						if (payload.name !== 'present_songs') {
+						// its cards speak for themselves once the tool-result arrives — but
+						// assembling them can still take a beat, so show the thinking dots
+						// rather than going silent.
+						if (payload.name === 'present_songs') {
+							openThinkingBubble();
+						} else {
 							openStatusBubble(describeToolUse(payload.name));
-							scrollToBottom();
 						}
+						scrollToBottom();
 					} else if (payload.type === 'tool-result') {
 						const presented = parsePresentSongsResult(payload.name, payload.output);
 						if (presented) {
 							// present_songs skips the status bubble, so if it's the first
-							// tool call this turn, the placeholder "typing" bubble is still
+							// tool call this turn, the placeholder/thinking bubble is still
 							// open and needs clearing before the cards render.
-							if (openMode === 'pending') openRow!.remove();
+							if (openMode === 'pending' || openMode === 'thinking') openRow!.remove();
 							renderSongCards(presented.tracks, presented.mode);
 							// The status bubble narrating the tool call is now stale; the
 							// next event (more tool calls or the reply) should open fresh.
@@ -875,6 +892,13 @@ const pageDescription = 'Chat with DJMe, an AI assistant powered by Claude.';
 
 			if (openMode === 'pending') {
 				openRow!.remove();
+			} else if (openMode === 'status' || openMode === 'thinking') {
+				// The stream ended (server-side turn finished) while a status/thinking
+				// bubble was still open — the model never sent trailing text to
+				// replace it. Surface that instead of leaving a stale "Creating your
+				// playlist now…" bubble on screen forever.
+				openRow!.remove();
+				appendMessage('error', "Didn't get a final reply for that — mind trying again?");
 			}
 		} catch (err) {
 			openRow?.remove();
