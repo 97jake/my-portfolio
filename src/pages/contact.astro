@@ -4,7 +4,7 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_TITLE } from '../consts';
 
-const pageDescription = "Get in touch about AI/ML pipelines, strategy, or software development.";
+const pageDescription = 'Get in touch about a website redesign or development project.';
 ---
 
 <!doctype html>
@@ -15,11 +15,12 @@ const pageDescription = "Get in touch about AI/ML pipelines, strategy, or softwa
 	<body>
 		<Header />
 		<main>
-			<section class="cta-band">
+			<section class="contact-hero">
+				<p class="eyebrow">Contact</p>
 				<h1>Have a project in mind?</h1>
-				<p>Tell me what you're working on — I'd love to hear about it.</p>
-				<a class="button button-inverse" href="mailto:97jake@gmail.com?subject=Consulting%20Inquiry"
-					>Email Me</a
+				<p class="sub">Tell me what you're working on — I'd love to hear about it.</p>
+				<a class="cta-primary" href="mailto:97jake@gmail.com?subject=Consulting%20Inquiry"
+					>Email me</a
 				>
 			</section>
 		</main>
@@ -33,47 +34,46 @@ const pageDescription = "Get in touch about AI/ML pipelines, strategy, or softwa
 		max-width: 1080px;
 		padding-top: 2em;
 	}
-
-	.cta-band {
-		background: linear-gradient(135deg, var(--accent-purple), var(--accent), var(--accent-teal));
-		color: white;
-		text-align: center;
-		border-radius: 16px;
-		padding: 4em 2em;
-		margin-bottom: 1em;
+	.contact-hero {
+		padding: 3em 1em 4em;
 	}
-
-	.cta-band h1 {
-		margin-bottom: 0.4em;
+	.eyebrow {
+		margin: 0 0 14px;
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--accent);
+		font-weight: 700;
 	}
-
-	.cta-band p {
-		font-size: 1.1em;
-		margin-bottom: 1.5em;
+	h1 {
+		margin: 0 0 18px;
+		font-weight: 700;
+		font-size: clamp(32px, 6vw, 52px);
+		line-height: 1.04;
+		letter-spacing: -0.025em;
+		color: rgb(var(--ink));
 	}
-
-	.button-inverse {
-		display: inline-block;
-		padding: 0.75em 1.5em;
-		border-radius: 8px;
+	.sub {
+		margin: 0 0 26px;
+		font-size: 16px;
+		line-height: 1.55;
+		color: rgb(var(--ink-2));
+		max-width: 46ch;
+	}
+	.cta-primary {
+		display: inline-flex;
+		align-items: center;
+		min-height: 46px;
+		padding: 0 22px;
+		border-radius: 999px;
+		font-size: 15px;
 		font-weight: 700;
 		text-decoration: none;
-		background: white;
-		color: var(--accent-dark);
-		transition:
-			background-color 0.2s ease,
-			color 0.2s ease,
-			box-shadow 0.2s ease;
+		background: rgb(var(--ink));
+		color: #fbf8f3;
 	}
-
-	.button-inverse:hover {
-		background: rgb(var(--gray-light));
-		color: var(--accent-dark);
-	}
-
-	@media (max-width: 720px) {
-		.cta-band {
-			padding: 2.5em 1.5em;
-		}
+	.cta-primary:hover {
+		background: var(--accent);
+		color: #fbf8f3;
 	}
 </style>

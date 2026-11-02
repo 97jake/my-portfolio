@@ -3,4 +3,4 @@
 
 export const SITE_TITLE = 'Jake Snow';
 export const SITE_DESCRIPTION =
-	'AI/ML pipeline development, AI strategy consulting, and full-stack software development.';
+	'Website redesign and development by Jake Snow, software developer in Arlington, VA.';
